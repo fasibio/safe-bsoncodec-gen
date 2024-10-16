@@ -1,6 +1,7 @@
 package safebsoncodecgen_test
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsonrw"
 )
 
 type BsonTestStruct struct {
@@ -64,27 +66,49 @@ func TestBsonMarshal(t *testing.T) {
 			},
 		},
 	}
-	bson.DefaultRegistry.RegisterTypeDecoder(reflect.TypeOf(safe.Option[string]{}), safebsoncodecgen.OptionCodec[string]{})
-	bson.DefaultRegistry.RegisterTypeEncoder(reflect.TypeOf(safe.Option[string]{}), safebsoncodecgen.OptionCodec[string]{})
 
-	bson.DefaultRegistry.RegisterTypeDecoder(reflect.TypeOf(safe.Option[int]{}), safebsoncodecgen.OptionCodec[int]{})
-	bson.DefaultRegistry.RegisterTypeEncoder(reflect.TypeOf(safe.Option[int]{}), safebsoncodecgen.OptionCodec[int]{})
+	reg := bson.NewRegistry()
 
-	// bson.DefaultRegistry.RegisterTypeDecoder(reflect.TypeOf(safe.Option[any]{}), safe.GenericOptionCodec{})
-	// bson.DefaultRegistry.RegisterTypeEncoder(reflect.TypeOf(safe.Option[any]{}), safe.GenericOptionCodec{})
+	reg.RegisterTypeDecoder(reflect.TypeOf(safe.Option[string]{}), safebsoncodecgen.OptionCodec[string]{})
+	reg.RegisterTypeEncoder(reflect.TypeOf(safe.Option[string]{}), safebsoncodecgen.OptionCodec[string]{})
 
-	bson.DefaultRegistry.RegisterTypeDecoder(reflect.TypeOf(safe.Option[BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[BsonSubTestStruct]{})
-	bson.DefaultRegistry.RegisterTypeEncoder(reflect.TypeOf(safe.Option[BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[BsonSubTestStruct]{})
-	bson.DefaultRegistry.RegisterTypeDecoder(reflect.TypeOf(safe.Option[[]BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[[]BsonSubTestStruct]{})
-	bson.DefaultRegistry.RegisterTypeEncoder(reflect.TypeOf(safe.Option[[]BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[[]BsonSubTestStruct]{})
+	reg.RegisterTypeDecoder(reflect.TypeOf(safe.Option[int]{}), safebsoncodecgen.OptionCodec[int]{})
+	reg.RegisterTypeEncoder(reflect.TypeOf(safe.Option[int]{}), safebsoncodecgen.OptionCodec[int]{})
+
+	reg.RegisterTypeDecoder(reflect.TypeOf(safe.Option[BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[BsonSubTestStruct]{})
+	reg.RegisterTypeEncoder(reflect.TypeOf(safe.Option[BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[BsonSubTestStruct]{})
+	reg.RegisterTypeDecoder(reflect.TypeOf(safe.Option[[]BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[[]BsonSubTestStruct]{})
+	reg.RegisterTypeEncoder(reflect.TypeOf(safe.Option[[]BsonSubTestStruct]{}), safebsoncodecgen.OptionCodec[[]BsonSubTestStruct]{})
+
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			res, err := bson.Marshal(test.Data)
+
+			buf := new(bytes.Buffer)
+			vw, err := bsonrw.NewBSONValueWriter(buf)
+			if err != nil {
+				panic(err)
+			}
+			enc, err := bson.NewEncoder(vw)
+			if err != nil {
+				panic(err)
+			}
+			err = enc.SetRegistry(reg)
+			assert.NoError(t, err)
+			err = enc.Encode(test.Data)
+			// res, err := bson.MarshalWithRegistry(reg, test.Data)
 			assert.NoError(t, err)
 			var got BsonTestStruct
 
-			err = bson.Unmarshal(res, &got)
+			dec, err := bson.NewDecoder(bsonrw.NewBSONDocumentReader(buf.Bytes()))
+			if err != nil {
+				panic(err)
+			}
+			err = dec.SetRegistry(reg)
 			assert.NoError(t, err)
+			err = dec.Decode(&got)
+			assert.NoError(t, err)
+
+			// err = bson.UnmarshalWithRegistry(reg, res, &got)
 			snaps.MatchSnapshot(t, got)
 		})
 

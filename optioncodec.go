@@ -1,6 +1,7 @@
 package safebsoncodecgen
 
 import (
+	"fmt"
 	"reflect"
 
 	"github.com/fasibio/safe"
@@ -9,42 +10,53 @@ import (
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
 )
 
-// Custom Codec for Option[T] to integrate with BSON operations.
 type OptionCodec[T any] struct{}
 
-// EncodeValue encodes the Option[T] for BSON storage.
 func (oc OptionCodec[T]) EncodeValue(
 	ctx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value,
 ) error {
-	opt := val.Interface().(safe.Option[T])
-	if opt.IsNone() {
-		return vw.WriteNull()
+	if opt, ok := val.Interface().(safe.Option[T]); ok {
+		if opt.IsNone() {
+			return vw.WriteNull()
+		}
+		en, err := bson.NewEncoder(vw)
+		if err != nil {
+			return err
+		}
+		err = en.SetRegistry(ctx.Registry)
+		if err != nil {
+			return err
+		}
+		return en.Encode(opt.Unwrap())
 	}
-	// Use bson.Marshal to encode the inner value.
-	en, err := bson.NewEncoder(vw)
-	if err != nil {
-		return err
-	}
-	return en.Encode(opt.Unwrap())
+	return fmt.Errorf("type not match only safe.Option are allowed ")
 }
 
-// DecodeValue decodes the BSON data into Option[T].
 func (oc OptionCodec[T]) DecodeValue(
 	ctx bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value,
 ) error {
 	if vr.Type() == bson.TypeNull {
-		vr.ReadNull()
+		err := vr.ReadNull()
+		if err != nil {
+			return err
+		}
 		val.Set(reflect.ValueOf(safe.None[T]()))
 		return nil
 	}
 
-	// Decode the inner value.
 	var v T
 	de, err := bson.NewDecoder(vr)
 	if err != nil {
 		return err
 	}
-	de.Decode(&v)
+	err = de.SetRegistry(ctx.Registry)
+	if err != nil {
+		return err
+	}
+	err = de.Decode(&v)
+	if err != nil {
+		return err
+	}
 
 	val.Set(reflect.ValueOf(safe.Some(&v)))
 	return nil
