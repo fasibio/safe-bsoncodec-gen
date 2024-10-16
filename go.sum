@@ -1,8 +1,8 @@
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fasibio/safe v0.0.9 h1:wlHnYRa2mypy7rlvgbkoDOswH4mQ28qS/yrA6V+H2q4=
-github.com/fasibio/safe v0.0.9/go.mod h1:MsG1xdF8AHsR+jdN1CqFmMvvGSNuCqVcc+VDFOdCjLc=
+github.com/fasibio/safe v0.0.10 h1:ULwazNsY8HD1x4ZjQ4gdLE3vVTTR7wgw4fZyPKv/xro=
+github.com/fasibio/safe v0.0.10/go.mod h1:MsG1xdF8AHsR+jdN1CqFmMvvGSNuCqVcc+VDFOdCjLc=
 github.com/gkampitakis/ciinfo v0.3.0 h1:gWZlOC2+RYYttL0hBqcoQhM7h1qNkVqvRCV1fOvpAv8=
 github.com/gkampitakis/ciinfo v0.3.0/go.mod h1:1NIwaOcFChN4fa/B0hEBdAb6npDlFL8Bwx4dfRLRqAo=
 github.com/gkampitakis/go-diff v1.3.2 h1:Qyn0J9XJSDTgnsgHRdz9Zp24RaJeKMUHg2+PDZZdC4M=
