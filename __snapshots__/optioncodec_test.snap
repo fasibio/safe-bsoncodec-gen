@@ -1,0 +1,52 @@
+
+[TestBsonMarshal/happy_path - 1]
+safebsoncodecgen_test.BsonTestStruct{
+    A:  1,
+    B:  safe.Option[int]{
+        value: &int(10),
+    },
+    C:  "Fooo",
+    F:  safe.Option[github.com/fasibio/safe-bsoncodec-gen_test.BsonSubTestStruct]{
+        value: &safebsoncodecgen_test.BsonSubTestStruct{
+            D:  safe.Option[string]{
+                value: &"baar",
+            },
+        },
+    },
+    G:  safe.Option[[]github.com/fasibio/safe-bsoncodec-gen_test.BsonSubTestStruct]{
+        value: &[]safebsoncodecgen_test.BsonSubTestStruct{
+            {
+                D:  safe.Option[string]{
+                    value: &"1",
+                },
+            },
+            {
+                D:  safe.Option[string]{
+                    value: &"2",
+                },
+            },
+        },
+    },
+}
+---
+
+[TestBsonMarshal/nil_values - 1]
+safebsoncodecgen_test.BsonTestStruct{
+    A:  1,
+    B:  safe.Option[int]{},
+    C:  "Fooo",
+    F:  safe.Option[github.com/fasibio/safe-bsoncodec-gen_test.BsonSubTestStruct]{
+        value: &safebsoncodecgen_test.BsonSubTestStruct{},
+    },
+    G:  safe.Option[[]github.com/fasibio/safe-bsoncodec-gen_test.BsonSubTestStruct]{
+        value: &[]safebsoncodecgen_test.BsonSubTestStruct{
+            {},
+            {
+                D:  safe.Option[string]{
+                    value: &"2",
+                },
+            },
+        },
+    },
+}
+---
