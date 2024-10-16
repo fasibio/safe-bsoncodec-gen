@@ -1,0 +1,48 @@
+
+[TestGenerator - 1]
+package test_model
+
+import (
+    "reflect"
+
+    "github.com/fasibio/safe"
+    safebsoncodecgen "github.com/fasibio/safe-bsoncodec-gen"
+    "go.mongodb.org/mongo-driver/bson/bsoncodec"
+)
+
+func RegisterOptionCodec(registry *bsoncodec.Registry) {
+    registry.RegisterTypeDecoder(
+        reflect.TypeOf(safe.Option[float64]{}),
+        safebsoncodecgen.OptionCodec[float64]{},
+    )
+    registry.RegisterTypeEncoder(
+        reflect.TypeOf(safe.Option[float64]{}),
+        safebsoncodecgen.OptionCodec[float64]{},
+    )
+    registry.RegisterTypeDecoder(
+        reflect.TypeOf(safe.Option[Model2]{}),
+        safebsoncodecgen.OptionCodec[Model2]{},
+    )
+    registry.RegisterTypeEncoder(
+        reflect.TypeOf(safe.Option[Model2]{}),
+        safebsoncodecgen.OptionCodec[Model2]{},
+    )
+    registry.RegisterTypeDecoder(
+        reflect.TypeOf(safe.Option[int]{}),
+        safebsoncodecgen.OptionCodec[int]{},
+    )
+    registry.RegisterTypeEncoder(
+        reflect.TypeOf(safe.Option[int]{}),
+        safebsoncodecgen.OptionCodec[int]{},
+    )
+    registry.RegisterTypeDecoder(
+        reflect.TypeOf(safe.Option[[]string]{}),
+        safebsoncodecgen.OptionCodec[[]string]{},
+    )
+    registry.RegisterTypeEncoder(
+        reflect.TypeOf(safe.Option[[]string]{}),
+        safebsoncodecgen.OptionCodec[[]string]{},
+    )
+}
+
+---

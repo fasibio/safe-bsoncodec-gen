@@ -182,11 +182,9 @@ func fillNeededTypes(f0p types.Type, ownPath string) RegisterCodecTypes {
 		// fmt.Println("SLICE", e.Elem().String())
 		res := fillNeededTypes(e.Elem(), ownPath)
 		for k, v := range res {
+			oldGetCodecSnippet := v.GetCodecSnippet
 			v.GetCodecSnippet = func() string {
-				if ownPath == v.PackagePath {
-					return fmt.Sprintf("[]%s", v.TypeName)
-				}
-				return fmt.Sprintf("[]%s.%s", v.PackageName, v.TypeName)
+				return fmt.Sprintf("[]%s", oldGetCodecSnippet())
 			}
 			registeredTypes[k] = v
 		}
@@ -196,11 +194,10 @@ func fillNeededTypes(f0p types.Type, ownPath string) RegisterCodecTypes {
 			res := fillNeededTypes(e.Elem(), ownPath)
 			e.Len()
 			for k, v := range res {
+				oldGetCodecSnippet := v.GetCodecSnippet
+
 				v.GetCodecSnippet = func() string {
-					if ownPath == v.PackagePath {
-						return fmt.Sprintf("[%d]%s", e.Len(), v.TypeName)
-					}
-					return fmt.Sprintf("[%d]%s.%s", e.Len(), v.PackageName, v.TypeName)
+					return fmt.Sprintf("[%d]%s", e.Len(), oldGetCodecSnippet())
 				}
 				registeredTypes[k] = v
 			}
