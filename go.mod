@@ -3,11 +3,11 @@ module github.com/fasibio/safe-bsoncodec-gen
 go 1.23.1
 
 require (
-	github.com/fasibio/safe v0.0.8
-	github.com/gkampitakis/go-snaps v0.5.4
-	github.com/stretchr/testify v1.8.4
+	github.com/fasibio/safe v0.0.9
+	github.com/gkampitakis/go-snaps v0.5.7
+	github.com/stretchr/testify v1.9.0
 	go.mongodb.org/mongo-driver v1.17.1
-	golang.org/x/tools v0.1.12
+	golang.org/x/tools v0.26.0
 )
 
 require (
@@ -23,7 +23,7 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
-	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/mod v0.21.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
