@@ -8,7 +8,7 @@ import (
 	"github.com/fasibio/safe"
 	safebsoncodecgen "github.com/fasibio/safe-bsoncodec-gen"
 	"github.com/gkampitakis/go-snaps/snaps"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
 )
@@ -82,7 +82,7 @@ func TestBsonMarshal(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-
+			require := require.New(t)
 			buf := new(bytes.Buffer)
 			vw, err := bsonrw.NewBSONValueWriter(buf)
 			if err != nil {
@@ -93,10 +93,10 @@ func TestBsonMarshal(t *testing.T) {
 				panic(err)
 			}
 			err = enc.SetRegistry(reg)
-			assert.NoError(t, err)
+			require.NoError(err)
 			err = enc.Encode(test.Data)
 			// res, err := bson.MarshalWithRegistry(reg, test.Data)
-			assert.NoError(t, err)
+			require.NoError(err)
 			var got BsonTestStruct
 
 			dec, err := bson.NewDecoder(bsonrw.NewBSONDocumentReader(buf.Bytes()))
@@ -104,9 +104,9 @@ func TestBsonMarshal(t *testing.T) {
 				panic(err)
 			}
 			err = dec.SetRegistry(reg)
-			assert.NoError(t, err)
+			require.NoError(err)
 			err = dec.Decode(&got)
-			assert.NoError(t, err)
+			require.NoError(err)
 
 			// err = bson.UnmarshalWithRegistry(reg, res, &got)
 			snaps.MatchSnapshot(t, got)
