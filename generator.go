@@ -186,7 +186,7 @@ func fillNeededTypes(f0p types.Type, ownPath string) RegisterCodecTypes {
 			v.GetCodecSnippet = func() string {
 				return fmt.Sprintf("[]%s", oldGetCodecSnippet())
 			}
-			registeredTypes[k] = v
+			registeredTypes[fmt.Sprintf("[]%s", k)] = v
 		}
 	case *types.Array:
 		{
@@ -199,7 +199,7 @@ func fillNeededTypes(f0p types.Type, ownPath string) RegisterCodecTypes {
 				v.GetCodecSnippet = func() string {
 					return fmt.Sprintf("[%d]%s", e.Len(), oldGetCodecSnippet())
 				}
-				registeredTypes[k] = v
+				registeredTypes[fmt.Sprintf("[%d]%s", e.Len(), k)] = v
 			}
 		}
 	case *types.Basic:
