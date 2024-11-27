@@ -229,6 +229,17 @@ func fillNeededTypes(f0p types.Type, ownPath string) RegisterCodecTypes {
 				},
 			}
 		}
+	case *types.Pointer:
+		{
+			res := fillNeededTypes(e.Elem(), ownPath)
+			for k, v := range res {
+				oldGetCodecSnippet := v.GetCodecSnippet
+				v.GetCodecSnippet = func() string {
+					return fmt.Sprintf("*%s", oldGetCodecSnippet())
+				}
+				registeredTypes[fmt.Sprintf("*%s", k)] = v
+			}
+		}
 	default:
 		{
 			fmt.Println("Not handeled type:", reflect.TypeOf(e), e.String())

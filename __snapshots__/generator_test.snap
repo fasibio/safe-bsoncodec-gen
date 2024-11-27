@@ -20,6 +20,14 @@ func RegisterOptionCodec(registry *bsoncodec.Registry) {
         safebsoncodecgen.OptionCodec[[10]string]{},
     )
     registry.RegisterTypeDecoder(
+        reflect.TypeOf(safe.Option[[]*Model2]{}),
+        safebsoncodecgen.OptionCodec[[]*Model2]{},
+    )
+    registry.RegisterTypeEncoder(
+        reflect.TypeOf(safe.Option[[]*Model2]{}),
+        safebsoncodecgen.OptionCodec[[]*Model2]{},
+    )
+    registry.RegisterTypeDecoder(
         reflect.TypeOf(safe.Option[[]string]{}),
         safebsoncodecgen.OptionCodec[[]string]{},
     )

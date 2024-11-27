@@ -16,9 +16,9 @@ func (oc OptionCodec[T]) EncodeValue(
 	ctx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value,
 ) error {
 	if opt, ok := val.Interface().(safe.Option[T]); ok {
-		if opt.IsNone() {
-			return vw.WriteNull()
-		}
+		// if opt.IsNone() {
+		// 	return vw.WriteNull()
+		// }
 		en, err := bson.NewEncoder(vw)
 		if err != nil {
 			return err

@@ -22,7 +22,7 @@ type BsonTestStruct struct {
 }
 
 type BsonSubTestStruct struct {
-	D safe.Option[string] `bson:"d" json:"d,omitempty"`
+	D safe.Option[string] `bson:"d,omitempty" json:"d,omitempty"`
 }
 
 func SomePtr[T any](v T) safe.Option[T] {
