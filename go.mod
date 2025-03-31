@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/fasibio/safe v0.0.9
 	github.com/gkampitakis/go-snaps v0.5.7
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	go.mongodb.org/mongo-driver v1.17.1
 	golang.org/x/tools v0.26.0
 )
